@@ -1,28 +1,79 @@
 #include <Arduino.h>
-#include <SPI.h>
-#include "Ucglib.h"
 
-Ucglib_ST7735_18x128x160_HWSPI ucg(/*cd=*/ 9, /*cs=*/ 10, /*reset=*/ 8);;  
+#define NUM_LINES_MASTER  8
+#define NUM_LINES_SLAVE  7
 
-void setup(void)
+// Define Connections to 74H165
+int load = 7;
+int clockEnablePin = 4;
+int dataIn = 5;
+int clockIn = 6;
+
+// Define Connections to 74HC595
+const int latchPin = 10;
+const int clockPin = 11;
+const int dataPin = 12;
+int iterator = 7;
+byte master = 0;
+
+void setup()
 {
-  delay(1000);
-  ucg.begin(UCG_FONT_MODE_TRANSPARENT);
-  //ucg.begin(UCG_FONT_MODE_SOLID);
-  ucg.clearScreen();
+  Serial.begin(9600);
+
+  // Setup 74HC165 connections
+  pinMode(load, OUTPUT);
+  pinMode(clockEnablePin, OUTPUT);
+  pinMode(clockIn, OUTPUT);
+  pinMode(dataIn, INPUT);
+
+  // Setup pins as Outputs
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+  
+  // set all zero
+
 }
 
-void loop(void)
+void loop()
 {
-  //ucg.setRotate90();
-  ucg.setFont(ucg_font_ncenR12_tr);
-  ucg.setColor(255, 255, 255);
-  //ucg.setColor(0, 255, 0);
-  ucg.setColor(1, 255, 0,0);
-  
-  ucg.setPrintPos(0,25);
-  ucg.print("Hello World!");
+  iterator = 0;
+  if (iterator == 7) {
+    iterator = 0;
+  } else {
+    iterator++;
+  }
 
+  bitSet(master, iterator);
 
-  delay(500);  
+  // Write pulse to load pin
+  digitalWrite(load, LOW);
+  delayMicroseconds(5);
+  digitalWrite(load, HIGH);
+  delayMicroseconds(5);
+
+  for(uint8_t i = 0; i < NUM_LINES_MASTER; ++i) {
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, i);
+    digitalWrite(latchPin, HIGH);
+  }
+
+  for(uint8_t i = 0; i < NUM_LINES_MASTER; ++i) {
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, LSBFIRST, i);
+    digitalWrite(latchPin, LOW);
+
+    // Get data from 74HC165
+    digitalWrite(clockIn, HIGH);
+    digitalWrite(clockEnablePin, LOW);
+    byte incoming = shiftIn(dataIn, clockIn, LSBFIRST);
+    digitalWrite(clockEnablePin, HIGH);
+    // Print to serial monitor
+    Serial.print("Master ");
+    Serial.print(i);
+    Serial.print(". Pin States:\r\n");
+    Serial.println(incoming, BIN);
+  }
+
+  delay(100);
 }
