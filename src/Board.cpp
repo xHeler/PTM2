@@ -1,5 +1,4 @@
 #include "Board.h"
-#include "Throw.h"
 
 // 74HC595
 int clockPin = 9;
@@ -34,6 +33,16 @@ Board::Board() {
 }
 
 void Board::update() {
+    check_default_matrix();
+    check_additional_matrix();
+    delay(100);
+}
+
+Throw Board::getLastThrow() {
+    return this->last;
+}
+
+void Board::check_default_matrix() {
     for(uint8_t i = 0; i < 10; ++i) {
   
     bitSet(leds, i);
@@ -63,13 +72,49 @@ void Board::update() {
       Serial.print(i);
       Serial.print(", j: ");
       Serial.print(j);
-      Throw t = SETUP_MATRIX[i][j];
+      this->last = SETUP_MATRIX[i][j];
       Serial.print(", Result: ");
-      Serial.println(t.getResult());
+      Serial.println(this->last.getResult());
     }
   
+    // Set LOW
     digitalWrite(latchPin, LOW);
     shiftOut(dataPin, clockPin, LSBFIRST, leds);
     digitalWrite(latchPin, HIGH);
   }
+}
+void Board::check_additional_matrix() {
+    for (int k = 2; k < 4; k++) {
+        digitalWrite(k, HIGH);
+
+        // Write pulse to load pin
+        digitalWrite(load, LOW);
+        delayMicroseconds(5);
+        digitalWrite(load, HIGH);
+        delayMicroseconds(5);
+
+        // Get data from 74HC165
+        digitalWrite(clockIn, HIGH);
+        digitalWrite(clockEnablePin, LOW);
+        byte incoming = shiftIn(dataIn, clockIn, LSBFIRST);
+        digitalWrite(clockEnablePin, HIGH);
+        // Print to serial monitor
+        int j = fromByteToIndex(incoming);
+
+        if (j >= 0 && j <= 6){
+            int i = 0;
+            if (k == 2)
+                i = 8;
+            if (k == 3)
+                i = 9;
+            Serial.print("i: ");
+            Serial.print(i);
+            Serial.print(", j: ");
+            Serial.print(j);
+            this->last = SETUP_MATRIX[i][j];
+            Serial.print(", Result: ");
+            Serial.println(this->last.getResult());
+        }
+        digitalWrite(k, LOW);
+    }
 }
