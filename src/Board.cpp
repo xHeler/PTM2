@@ -14,22 +14,22 @@ int dataIn = 5;
 int clockIn = 6;
 
 Board::Board() {
-  // Setup 74HC595 connections
-  pinMode(latchPin, OUTPUT);
-  pinMode(dataPin, OUTPUT);
-  pinMode(clockPin, OUTPUT);
+    // Setup 74HC595 connections
+    pinMode(latchPin, OUTPUT);
+    pinMode(dataPin, OUTPUT);
+    pinMode(clockPin, OUTPUT);
 
-  // Setup 74HC165 connections
-  pinMode(load, OUTPUT);
-  pinMode(clockEnablePin, OUTPUT);
-  pinMode(clockIn, OUTPUT);
-  pinMode(dataIn, INPUT);
+    // Setup 74HC165 connections
+    pinMode(load, OUTPUT);
+    pinMode(clockEnablePin, OUTPUT);
+    pinMode(clockIn, OUTPUT);
+    pinMode(dataIn, INPUT);
 
-  // Setup two additional analog pins as output
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
-  digitalWrite(2, LOW);
-  digitalWrite(3, LOW);
+    // Setup two additional analog pins as output
+    pinMode(2, OUTPUT);
+    pinMode(3, OUTPUT);
+    digitalWrite(2, LOW);
+    digitalWrite(3, LOW);
 }
 
 void Board::update() {
@@ -117,4 +117,8 @@ void Board::check_additional_matrix() {
         }
         digitalWrite(k, LOW);
     }
+}
+
+Throw & Board::getThrow() {
+    return this->last;
 }

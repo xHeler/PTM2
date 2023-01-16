@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Arduino.h>
 #include "Throw.h"
 
@@ -11,4 +13,5 @@ public:
     
     void update();
     Throw getLastThrow();
+    Throw & getThrow();
 };
