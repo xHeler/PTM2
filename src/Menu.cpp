@@ -27,6 +27,9 @@ void Menu::update() {
         Serial.println("Down");
         break;
     default:
-        break;
+        return;
     }
+    this->last->multiplier = 0;
+    this->last->value = 0;
+    delay(250);
 }

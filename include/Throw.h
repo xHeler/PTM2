@@ -7,7 +7,7 @@ const uint8_t NUM_LINES_MASTER = 10;
 const uint8_t NUM_LINES_SLAVE = 7;
 
 class Throw{
-    public:
+public:
     uint8_t multiplier;
     uint8_t value;
 

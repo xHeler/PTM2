@@ -4,7 +4,6 @@
 #include "Throw.h"
 
 
-
 class Menu {
 private:
     Throw* last;
