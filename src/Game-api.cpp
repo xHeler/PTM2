@@ -13,6 +13,7 @@ GameStatus GameApi::Loop(){
                     Serial.print(this->playerList[i].nick);
                     Serial.print(" attempts left: ");
                     Serial.println(this->playerList[i].attempts);
+                    
 
                     hit = Throw(0,0);
                     while(hit == Throw(0,0)){
@@ -51,6 +52,7 @@ GameStatus GameApi::Loop(){
                             this->playerList[i].attempts = 255;
                             
                     Serial.println();
+                    display.game(this->round + 1, this->playerList[i]);
                 }
                 
             }
