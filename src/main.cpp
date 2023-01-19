@@ -1,24 +1,23 @@
 #include <Arduino.h>
-#include <LiquidCrystal_AIP31068_I2C.h>
+#include "Game-api.h"
+#include "Display.h"
 
-LiquidCrystal_AIP31068_I2C lcd(0x3E,20,4);  // set the LCD address to 0x3E for a 20 chars and 4 line display
-
+Settings settings;
 
 void setup()
 {
-  lcd.init();                      // initialize the lcd 
-  // Print a message to the LCD.
-  lcd.setCursor(0,0);
-  lcd.blink_on();
-  lcd.print("[ 1 ] Players ");
-  lcd.setCursor(0,1);
-  lcd.print("[ 301 ] Points ");
-  lcd.setCursor(0,3);
-  lcd.print("[ ] Start");
-  lcd.setCursor(19, 0);
+  Display display;
+  Serial.begin(9600);
+  settings = Settings(0, 2, 301, false, false);
+  //display.start(2, 301, false, true, 0);
+  Player player(1, "Test", 301, 3);
+  display.game(3, player);
 }
 
 
 void loop()
 {
+  GameApi game(settings);
+  while(true)
+    game.Loop();
 }

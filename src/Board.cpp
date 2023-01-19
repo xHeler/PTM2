@@ -35,11 +35,17 @@ Board::Board() {
 void Board::update() {
     check_default_matrix();
     check_additional_matrix();
-    delay(100);
+    delay(200);
 }
 
 Throw Board::getLastThrow() {
     return this->last;
+}
+
+Throw Board::getLastThrowAndReset() {
+    Throw rtn = this->last;
+    this->last = Throw(0, 0);
+    return rtn;
 }
 
 void Board::check_default_matrix() {
@@ -68,13 +74,7 @@ void Board::check_default_matrix() {
     int j = fromByteToIndex(incoming);
 
     if (j >= 0 && j <= 6){
-      Serial.print("i: ");
-      Serial.print(i);
-      Serial.print(", j: ");
-      Serial.print(j);
       this->last = SETUP_MATRIX[i][j];
-      Serial.print(", Result: ");
-      Serial.println(this->last.getResult());
     }
   
     // Set LOW
@@ -107,13 +107,7 @@ void Board::check_additional_matrix() {
                 i = 8;
             if (k == 3)
                 i = 9;
-            Serial.print("i: ");
-            Serial.print(i);
-            Serial.print(", j: ");
-            Serial.print(j);
             this->last = SETUP_MATRIX[i][j];
-            Serial.print(", Result: ");
-            Serial.println(this->last.getResult());
         }
         digitalWrite(k, LOW);
     }

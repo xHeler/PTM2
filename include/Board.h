@@ -13,5 +13,6 @@ public:
     
     void update();
     Throw getLastThrow();
+    Throw getLastThrowAndReset();
     Throw & getThrow();
 };
