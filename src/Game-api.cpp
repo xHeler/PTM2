@@ -33,26 +33,33 @@ GameStatus GameApi::Loop(){
                     if(hit.value * hit.multiplier > this->playerList[i].points){
                         Serial.println("\tTo much");
                         this->playerList[i].attempts = 0;
+                        display.game(this->round + 1, this->playerList[i]);
                     }
                     else if(hit.value * hit.multiplier == this->playerList[i].points){
                         Serial.println("Finished");
                         this->status = GameStatus_Finished;
                         this->playerList[i].attempts = 0;
+                        display.game(this->round + 1, this->playerList[i]);
                     }
                     else{
                         this->playerList[i].points = this->playerList[i].points - hit;
                         Serial.println("OK");
                         --this->playerList[i].attempts;
+                        display.game(this->round + 1, this->playerList[i]);
                     }
                     if(this->playerList[i].attempts == 0){
-                        this->playerList[i == this->settings.numberOfPlayers - 1 ? 0 : i + 1].attempts = 3;    
+                        this->playerList[i == this->settings.numberOfPlayers - 1 ? 0 : i + 1].attempts = 3;  
+                        display.game(this->round + 1, this->playerList[i]);  
                     }
                 
-                    if(this->playerList[i].attempts == 0)
-                            this->playerList[i].attempts = 255;
+                    if(this->playerList[i].attempts == 0){
+                        this->playerList[i].attempts = 255;
+                        display.game(this->round + 1, this->playerList[i+1]);  
+                    }
+                            
                             
                     Serial.println();
-                    display.game(this->round + 1, this->playerList[i]);
+                    //display.game(this->round + 1, this->playerList[i]);
                 }
                 
             }

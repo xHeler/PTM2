@@ -35,7 +35,7 @@ Board::Board() {
 void Board::update() {
     check_default_matrix();
     check_additional_matrix();
-    delay(200);
+    
 }
 
 Throw Board::getLastThrow() {
@@ -74,7 +74,12 @@ void Board::check_default_matrix() {
     int j = fromByteToIndex(incoming);
 
     if (j >= 0 && j <= 6){
-      this->last = SETUP_MATRIX[i][j];
+        Throw actual = SETUP_MATRIX[i][j];
+        unsigned long currentMillis = millis();
+        if (currentMillis - previousMillis >= interval && this->last.getResult() != actual.getResult()){
+            this->last = SETUP_MATRIX[i][j];
+            previousMillis = currentMillis;
+        }
     }
   
     // Set LOW
@@ -107,7 +112,12 @@ void Board::check_additional_matrix() {
                 i = 8;
             if (k == 3)
                 i = 9;
-            this->last = SETUP_MATRIX[i][j];
+            Throw actual = SETUP_MATRIX[i][j];
+            unsigned long currentMillis = millis();
+            if (currentMillis - previousMillis >= interval && this->last.getResult() != actual.getResult()){
+                this->last = SETUP_MATRIX[i][j];
+                previousMillis = currentMillis;
+            }
         }
         digitalWrite(k, LOW);
     }

@@ -9,7 +9,6 @@ id{0}, numberOfPlayers{0}, startPoints{301}, doubleIn{false}, doubleOut{false}
 
 Settings::Settings(const uint16_t &id, const uint8_t &numberOfPlayers, const uint16_t &startPoints, const bool &doubleIn, const bool &doubleOut):
 id{id}, numberOfPlayers{numberOfPlayers}, startPoints{startPoints}, doubleIn{doubleIn}, doubleOut{doubleOut}{
-    
     for(int i = 0; i < this->numberOfPlayers; ++i)
         this->playersId[i] = playersId[i];
         
