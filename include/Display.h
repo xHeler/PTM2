@@ -10,6 +10,8 @@ public:
 
     void start(const int players, const int points, bool dbl_in, bool dbl_out, const int option);
     void game(const int round, const Player player);
+    void finish(const Player player);
+    void clear();
 };
 
 #endif

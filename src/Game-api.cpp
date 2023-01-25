@@ -39,7 +39,10 @@ GameStatus GameApi::Loop(){
                         Serial.println("Finished");
                         this->status = GameStatus_Finished;
                         this->playerList[i].attempts = 0;
-                        display.game(this->round + 1, this->playerList[i]);
+                        //display.game(this->round + 1, this->playerList[i]);
+                        display.clear();
+                        display.finish(this->playerList[i]);
+                        delay(10000);
                     }
                     else{
                         this->playerList[i].points = this->playerList[i].points - hit;
@@ -54,7 +57,11 @@ GameStatus GameApi::Loop(){
                 
                     if(this->playerList[i].attempts == 0){
                         this->playerList[i].attempts = 255;
-                        display.game(this->round + 1, this->playerList[i+1]);  
+                        if (i == this->settings.numberOfPlayers - 1) {
+                            display.game(this->round + 1, this->playerList[0]);  
+                        } else {
+                            display.game(this->round + 1, this->playerList[i+1]);  
+                        }
                     }
                             
                             
